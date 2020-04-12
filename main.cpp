@@ -1,37 +1,25 @@
 #include <iostream>
-#include "Vector.h"
+#include "LinkedList.h"
 
 using namespace std;
 
-
 int main()
 {
+	LinkedList list;
+	list.insert(0, 3);
+	list.insert(0, 1);
+	list.insert(1, 5);
+	list.insert(1, 4);
+	list.insert(2, 47);
+	list.write();
 
-	MyVector vec1 = {0, 0, ResizeStrategy::Multiplicative, 2};
+	//LinkedList l;
+	//l = list.getReverseList();
+	//list.insert(2, 444);
+	//l.write();
+	list.reverse();
+	list.write();
 
-	vec1.insert(0, 4);
-	vec1.write();
-	vec1.insert(0, 3);
-	vec1.write();
-	vec1.insert(0, 2);
-	vec1.write();
-	vec1.insert(0, 1);
-	vec1.write();
-	vec1.insert(0, 0);
-	vec1.write();
-	vec1.insert(0, -1);
-	vec1.write();
-	vec1.insert(0, -2);
-	vec1.write();
-	vec1.insert(0, -3);
-	vec1.write();
-	vec1.insert(0, -4);
-	vec1.write();
-	vec1.insert(0, -5);
-	vec1.write();
-
-
-	vec1.write();
 	int n;
 	cin >> n;
 }
