@@ -234,8 +234,8 @@ void MyVector::insert(const size_t i, const ValueType & value)
 void MyVector::insert(const size_t i, const MyVector & value)
 {
 	resize(_size + value._size);
-	for (size_t idx = _size; idx >= i + value._size; idx--) //[0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0]
-	{														//[7, 8, 9, 10, 11, 12]
+	for (size_t idx = _size; idx >= i + value._size; idx--) 
+	{														
 		_data[idx] = _data[idx - value._size];
 	}
 
@@ -249,19 +249,19 @@ void MyVector::reserve(const size_t capacity)
 {
 	if (capacity > _capacity)
 	{
-		ValueType* buff = new ValueType[_capacity];		//массив для старых значений
-		ValueType giver; //переменная для передачи значений
+		ValueType* buff = new ValueType[_capacity];		//РјР°СЃСЃРёРІ РґР»СЏ СЃС‚Р°СЂС‹С… Р·РЅР°С‡РµРЅРёР№
+		ValueType giver; //РїРµСЂРµРјРµРЅРЅР°СЏ РґР»СЏ РїРµСЂРµРґР°С‡Рё Р·РЅР°С‡РµРЅРёР№
 
 		for (size_t i = 0; i < _size; ++i)
 		{
 			giver = _data[i];
-			buff[i] = giver;		//переносим старые значения
+			buff[i] = giver;		//РїРµСЂРµРЅРѕСЃРёРј СЃС‚Р°СЂС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
 		}
 
-		delete[] _data; //освобождаем старую память
+		delete[] _data; //РѕСЃРІРѕР±РѕР¶РґР°РµРј СЃС‚Р°СЂСѓСЋ РїР°РјСЏС‚СЊ
 		_data = NULL;
-		_capacity = capacity;	//запомнили новое capacity
-		_data = new ValueType[_capacity];   //выделяем новую память новой длины
+		_capacity = capacity;	//Р·Р°РїРѕРјРЅРёР»Рё РЅРѕРІРѕРµ capacity
+		_data = new ValueType[_capacity];   //РІС‹РґРµР»СЏРµРј РЅРѕРІСѓСЋ РїР°РјСЏС‚СЊ РЅРѕРІРѕР№ РґР»РёРЅС‹
 		for (size_t idx = 0; idx < _capacity; idx++)
 		{
 			_data[idx] = 0;
@@ -270,7 +270,7 @@ void MyVector::reserve(const size_t capacity)
 		for (size_t i = 0; i < _size; ++i)
 		{
 			giver = buff[i];
-			_data[i] = giver;	//возвращаем старые элементы на свои места
+			_data[i] = giver;	//РІРѕР·РІСЂР°С‰Р°РµРј СЃС‚Р°СЂС‹Рµ СЌР»РµРјРµРЅС‚С‹ РЅР° СЃРІРѕРё РјРµСЃС‚Р°
 		}
 		delete[] buff;
 		buff = nullptr;
@@ -282,7 +282,7 @@ void MyVector::resize(const size_t size, const ValueType value)
 	size_t oldSize = _size;
 	_size = size;
 
-	// считаем capacity по формуле Multiplicative
+	// СЃС‡РёС‚Р°РµРј capacity РїРѕ С„РѕСЂРјСѓР»Рµ Multiplicative
 	if (_resizeStrategy == ResizeStrategy::Multiplicative) 
 	{
 		while (_capacity < _size)
@@ -295,7 +295,7 @@ void MyVector::resize(const size_t size, const ValueType value)
 				_capacity = _capacity;
 		}
 	}	
-	// считаем capacity по формуле Additive
+	// СЃС‡РёС‚Р°РµРј capacity РїРѕ С„РѕСЂРјСѓР»Рµ Additive
 	else if (_resizeStrategy == ResizeStrategy::Additive) 
 	{
 		while (_capacity < _size)
@@ -311,7 +311,7 @@ void MyVector::resize(const size_t size, const ValueType value)
 	}
 	if (oldSize != 0)
 	{
-		reserve(_capacity); // резервируем память для вектора
+		reserve(_capacity); // СЂРµР·РµСЂРІРёСЂСѓРµРј РїР°РјСЏС‚СЊ РґР»СЏ РІРµРєС‚РѕСЂР°
 	}
 	else if (oldSize == 0)
 	{
@@ -320,7 +320,7 @@ void MyVector::resize(const size_t size, const ValueType value)
 
 	for (size_t i = oldSize; i < _capacity; ++i)
 	{
-		_data[i] = value; // заполняем новое место дефолтными значениями
+		_data[i] = value; // Р·Р°РїРѕР»РЅСЏРµРј РЅРѕРІРѕРµ РјРµСЃС‚Рѕ РґРµС„РѕР»С‚РЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
 	}
 }
 
@@ -342,6 +342,7 @@ ValueType* MyVector::end()
 	return _data + _capacity;
 }
 
+/*
 MyVector MyVector::sortedSquares(const MyVector & vec, SortedStrategy strategy)
 {
 	MyVector outVec = vec;
@@ -349,14 +350,14 @@ MyVector MyVector::sortedSquares(const MyVector & vec, SortedStrategy strategy)
 	for (size_t i = 0; i < _size; i++)
 	{
 		if (_data[i] == 0)
-			outVec._data[idxOutVec] = _data[i];  //сохраняем все нули
+			outVec._data[idxOutVec] = _data[i];  //СЃРѕС…СЂР°РЅСЏРµРј РІСЃРµ РЅСѓР»Рё
 	}
 	
 	ValueType min, minusMin;
 	ValueType max, minusMax;
-	//[-23, -12, -1, 5, 7, -7, 1]
 	return vec;
 }
+*/
 
 void MyVector::write()
 {
