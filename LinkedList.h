@@ -5,11 +5,11 @@ using ValueType = double;
 class LinkedList
 {
 public:
-	//класс узла списка
-	//по своей сути, может содержать любые данные,
-	//можно реализовать и ассоциативный массив, просто добавив
-	//поле с ключем в узел и, с учетом этого, поменять методы LinkedList
-	//(доступ по ключу, поиск по ключу и т.д.)
+	//РєР»Р°СЃСЃ СѓР·Р»Р° СЃРїРёСЃРєР°
+	//РїРѕ СЃРІРѕРµР№ СЃСѓС‚Рё, РјРѕР¶РµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊ Р»СЋР±С‹Рµ РґР°РЅРЅС‹Рµ,
+	//РјРѕР¶РЅРѕ СЂРµР°Р»РёР·РѕРІР°С‚СЊ Рё Р°СЃСЃРѕС†РёР°С‚РёРІРЅС‹Р№ РјР°СЃСЃРёРІ, РїСЂРѕСЃС‚Рѕ РґРѕР±Р°РІРёРІ
+	//РїРѕР»Рµ СЃ РєР»СЋС‡РµРј РІ СѓР·РµР» Рё, СЃ СѓС‡РµС‚РѕРј СЌС‚РѕРіРѕ, РїРѕРјРµРЅСЏС‚СЊ РјРµС‚РѕРґС‹ LinkedList
+	//(РґРѕСЃС‚СѓРї РїРѕ РєР»СЋС‡Сѓ, РїРѕРёСЃРє РїРѕ РєР»СЋС‡Сѓ Рё С‚.Рґ.)
 	struct Node
 	{
 		Node(const ValueType& value, Node* next = nullptr);
@@ -24,47 +24,47 @@ public:
 
 public:
 	////
-	LinkedList(); //конструктор по умолчанию
-	LinkedList(const LinkedList& copyList); //конструктор копирования
+	LinkedList(); //РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+	LinkedList(const LinkedList& copyList); //РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєРѕРїРёСЂРѕРІР°РЅРёСЏ
 	LinkedList& operator=(const LinkedList& copyList); 
 
-	LinkedList(LinkedList&& moveList) noexcept; // перемещение с последующим очищением старого
+	LinkedList(LinkedList&& moveList) noexcept; // РїРµСЂРµРјРµС‰РµРЅРёРµ СЃ РїРѕСЃР»РµРґСѓСЋС‰РёРј РѕС‡РёС‰РµРЅРёРµРј СЃС‚Р°СЂРѕРіРѕ
 	LinkedList& operator=(LinkedList&& movelist) noexcept;
 	~LinkedList();
 	////
 
-	// доступ к значению элемента по индексу
+	// РґРѕСЃС‚СѓРї Рє Р·РЅР°С‡РµРЅРёСЋ СЌР»РµРјРµРЅС‚Р° РїРѕ РёРЅРґРµРєСЃСѓ
 	ValueType& operator[](const size_t pos) const;
-	//доступ к узлу по индексу
+	//РґРѕСЃС‚СѓРї Рє СѓР·Р»Сѓ РїРѕ РёРЅРґРµРєСЃСѓ
 	LinkedList::Node* getNode(const size_t pos) const;
 
-	//вставка элемента по индексу, сначала ищем, куда вставлять (O(n)), потом вставляем (O(1))
+	//РІСЃС‚Р°РІРєР° СЌР»РµРјРµРЅС‚Р° РїРѕ РёРЅРґРµРєСЃСѓ, СЃРЅР°С‡Р°Р»Р° РёС‰РµРј, РєСѓРґР° РІСЃС‚Р°РІР»СЏС‚СЊ (O(n)), РїРѕС‚РѕРј РІСЃС‚Р°РІР»СЏРµРј (O(1))
 	void insert(const size_t pos, const ValueType& value);
-	//вставка элемента после узла, (O(1))
+	//РІСЃС‚Р°РІРєР° СЌР»РµРјРµРЅС‚Р° РїРѕСЃР»Рµ СѓР·Р»Р°, (O(1))
 	static void insertAfterNode(Node* node, const ValueType& value);
-	//вставка в конец (O(n))
+	//РІСЃС‚Р°РІРєР° РІ РєРѕРЅРµС† (O(n))
 	void pushBack(const ValueType& value);
-	//вставка в начало (O(1))
+	//РІСЃС‚Р°РІРєР° РІ РЅР°С‡Р°Р»Рѕ (O(1))
 	void pushFront(const ValueType& value);
 
-	// удаление
+	// СѓРґР°Р»РµРЅРёРµ
 	void remove(const size_t pos);
 	void removeNextNode(Node* node);
 	void removeFront();
 	void removeBack();
 
-	//поиск, (O(n))
-	long long int findIndex(const ValueType& value) const; //поиск индекса узла с этим value
-	Node* findNode(const ValueType& value) const; //поиск узла с таким value
+	//РїРѕРёСЃРє, (O(n))
+	long long int findIndex(const ValueType& value) const; //РїРѕРёСЃРє РёРЅРґРµРєСЃР° СѓР·Р»Р° СЃ СЌС‚РёРј value
+	Node* findNode(const ValueType& value) const; //РїРѕРёСЃРє СѓР·Р»Р° СЃ С‚Р°РєРёРј value
 
-	//разворот списка
+	//СЂР°Р·РІРѕСЂРѕС‚ СЃРїРёСЃРєР°
 	void reverse();
 	LinkedList reverse() const;
 	LinkedList getReverseList() const;
 
 	size_t size() const;
 
-	void write() const; //метод написания списка
+	void write() const; //РјРµС‚РѕРґ РЅР°РїРёСЃР°РЅРёСЏ СЃРїРёСЃРєР°
 
 private:
 	Node* _head;
