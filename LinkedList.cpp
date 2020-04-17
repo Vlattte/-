@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-//_______________________________________________________________________//
+//==================================================================================================//
 
 LinkedList::Node::Node(const ValueType& value, Node* next)
 {
@@ -18,7 +18,7 @@ LinkedList::Node::~Node()
 
 void LinkedList::Node::insertNext(const ValueType & value)
 {
-	Node* newNode = new Node(value, this->next); //создаем новый узел со значением value
+	Node* newNode = new Node(value, this->next); //СЃРѕР·РґР°РµРј РЅРѕРІС‹Р№ СѓР·РµР» СЃРѕ Р·РЅР°С‡РµРЅРёРµРј value
 	this->next = newNode;
 }
 
@@ -30,7 +30,7 @@ void LinkedList::Node::removeNext()
 	this->next = newNext;
 }
 
-//_______________________________________________________________________//
+//==================================================================================================//
 
 LinkedList::LinkedList()
 	:_head(nullptr), _size(0)
@@ -46,14 +46,14 @@ LinkedList::LinkedList(const LinkedList & copyList)
 		return;
 	}
 
-	// головной узел этого узла = (выделяем память и вставляем туда значение головного узла)
+	// РіРѕР»РѕРІРЅРѕР№ СѓР·РµР» СЌС‚РѕРіРѕ СѓР·Р»Р° = (РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ Рё РІСЃС‚Р°РІР»СЏРµРј С‚СѓРґР° Р·РЅР°С‡РµРЅРёРµ РіРѕР»РѕРІРЅРѕРіРѕ СѓР·Р»Р°)
 	this->_head = new Node(copyList._head->value); 
 
 	Node* currentNode = this->_head; 
 	Node* currentCopyNode = copyList._head->next; 
 	while (currentCopyNode)
 	{
-		// next для текущего узла = текущий скопированный узел
+		// next РґР»СЏ С‚РµРєСѓС‰РµРіРѕ СѓР·Р»Р° = С‚РµРєСѓС‰РёР№ СЃРєРѕРїРёСЂРѕРІР°РЅРЅС‹Р№ СѓР·РµР»
 		currentNode->next = new Node(currentCopyNode->value);
 		currentCopyNode = currentCopyNode->next;
 		currentNode = currentNode->next;
@@ -65,7 +65,7 @@ LinkedList& LinkedList::operator=(const LinkedList& copyList)
 {
 	if (this == &copyList)
 	{
-		return *this; //если копируем самого себя
+		return *this; //РµСЃР»Рё РєРѕРїРёСЂСѓРµРј СЃР°РјРѕРіРѕ СЃРµР±СЏ
 	}
 
 	this->_size = copyList._size;
@@ -87,10 +87,10 @@ LinkedList& LinkedList::operator=(LinkedList && movelist) noexcept
 {
 	if (this == &movelist)
 	{
-		return *this;	//если это мы, то возвращаем себя же
+		return *this;	//РµСЃР»Рё СЌС‚Рѕ РјС‹, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµРј СЃРµР±СЏ Р¶Рµ
 	}
 
-	forceNodeDelete(_head); //рекурсивно удаляем this
+	forceNodeDelete(_head); //СЂРµРєСѓСЂСЃРёРІРЅРѕ СѓРґР°Р»СЏРµРј this
 	
 	this->_size = movelist._size;
 	this->_head = movelist._head;
@@ -98,7 +98,7 @@ LinkedList& LinkedList::operator=(LinkedList && movelist) noexcept
 	movelist._size = 0; 
 	movelist._head = nullptr; 
 
-	return *this; //возвращаем себя скопированного
+	return *this; //РІРѕР·РІСЂР°С‰Р°РµРј СЃРµР±СЏ СЃРєРѕРїРёСЂРѕРІР°РЅРЅРѕРіРѕ
 
 }
 
@@ -107,7 +107,7 @@ LinkedList::~LinkedList()
 	forceNodeDelete(_head);
 }
 
-//_______________________________________________________________________//
+//==================================================================================================//
 
 ValueType & LinkedList::operator[](const size_t pos) const
 {
@@ -118,17 +118,17 @@ LinkedList::Node* LinkedList::getNode(const size_t pos) const
 {
 	if (pos < 0)
 	{
-		assert(pos < 0); //ошибка: размер меньше нуля
+		assert(pos < 0); //РѕС€РёР±РєР°: СЂР°Р·РјРµСЂ РјРµРЅСЊС€Рµ РЅСѓР»СЏ
 	}
 	else if (pos >= this->_size)
 	{
-		assert(pos >= this->_size); //ошибка: вышли за границу списка
+		assert(pos >= this->_size); //РѕС€РёР±РєР°: РІС‹С€Р»Рё Р·Р° РіСЂР°РЅРёС†Сѓ СЃРїРёСЃРєР°
 	}
 
-	Node* bufNode = this->_head; // создаем буфер для хранения головного узла
+	Node* bufNode = this->_head; // СЃРѕР·РґР°РµРј Р±СѓС„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РіРѕР»РѕРІРЅРѕРіРѕ СѓР·Р»Р°
 	for (int i = 0; i < pos; i++)
 	{
-		bufNode = bufNode->next; //перебираем элементы до нужного
+		bufNode = bufNode->next; //РїРµСЂРµР±РёСЂР°РµРј СЌР»РµРјРµРЅС‚С‹ РґРѕ РЅСѓР¶РЅРѕРіРѕ
 	}
 
 	return bufNode;
@@ -138,18 +138,18 @@ void LinkedList::insert(const size_t pos, const ValueType & value)
 {
 	if (pos < 0)
 	{
-		assert(pos < 0); //ошибка: размер меньше нуля
+		assert(pos < 0); //РѕС€РёР±РєР°: СЂР°Р·РјРµСЂ РјРµРЅСЊС€Рµ РЅСѓР»СЏ
 	}
 	else if (pos > this->_size)
 	{
-		assert(pos > this->_size); //ошибка: вышли за границу списка
+		assert(pos > this->_size); //РѕС€РёР±РєР°: РІС‹С€Р»Рё Р·Р° РіСЂР°РЅРёС†Сѓ СЃРїРёСЃРєР°
 	}
 
-	if (pos == 0) //если нужно вставить в начало списка, то pushFront
+	if (pos == 0) //РµСЃР»Рё РЅСѓР¶РЅРѕ РІСЃС‚Р°РІРёС‚СЊ РІ РЅР°С‡Р°Р»Рѕ СЃРїРёСЃРєР°, С‚Рѕ pushFront
 	{
 		pushFront(value); 
 	}
-	else //иначе перебираем узлы и вставляем на нужную позицию
+	else //РёРЅР°С‡Рµ РїРµСЂРµР±РёСЂР°РµРј СѓР·Р»С‹ Рё РІСЃС‚Р°РІР»СЏРµРј РЅР° РЅСѓР¶РЅСѓСЋ РїРѕР·РёС†РёСЋ
 	{
 		Node* bufNode = this->_head;
 		for (size_t i = 0; i < pos - 1; ++i)
@@ -178,7 +178,7 @@ void LinkedList::pushBack(const ValueType & value)
 
 void LinkedList::pushFront(const ValueType & value)
 {
-	_head = new Node(value, _head); // перезаписываем головной узел
+	_head = new Node(value, _head); // РїРµСЂРµР·Р°РїРёСЃС‹РІР°РµРј РіРѕР»РѕРІРЅРѕР№ СѓР·РµР»
 	++_size;
 }
 
@@ -186,11 +186,11 @@ void LinkedList::remove(const size_t pos)
 {
 	if (pos < 0)
 	{
-		assert(pos < 0); //ошибка: размер меньше нуля
+		assert(pos < 0); //РѕС€РёР±РєР°: СЂР°Р·РјРµСЂ РјРµРЅСЊС€Рµ РЅСѓР»СЏ
 	}
 	else if (pos > this->_size)
 	{
-		assert(pos > this->_size); //ошибка: вышли за границу списка
+		assert(pos > this->_size); //РѕС€РёР±РєР°: РІС‹С€Р»Рё Р·Р° РіСЂР°РЅРёС†Сѓ СЃРїРёСЃРєР°
 	}
 	
 	if (pos == 0)
@@ -246,7 +246,7 @@ long long int LinkedList::findIndex(const ValueType& value) const
 
  void LinkedList::reverse() 
  {
-	 size_t cutSize; //уменьшенный в два раза размер
+	 size_t cutSize; //СѓРјРµРЅСЊС€РµРЅРЅС‹Р№ РІ РґРІР° СЂР°Р·Р° СЂР°Р·РјРµСЂ
 	 if ((_size % 2) == 0)
 	 {
 		 cutSize = _size / 2;
@@ -292,10 +292,10 @@ void LinkedList::forceNodeDelete(Node* node)
 {
 	if (node == nullptr)
 	{
-		return; // если конец списка 
+		return; // РµСЃР»Рё РєРѕРЅРµС† СЃРїРёСЃРєР° 
 	}
 
-	// удаляем всех впереди, пока не встретим nullptr
+	// СѓРґР°Р»СЏРµРј РІСЃРµС… РІРїРµСЂРµРґРё, РїРѕРєР° РЅРµ РІСЃС‚СЂРµС‚РёРј nullptr
 	Node* nextDeleteNode = node->next; 
 	delete node;
 	forceNodeDelete(nextDeleteNode);
