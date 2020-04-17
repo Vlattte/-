@@ -13,10 +13,6 @@ int main()
 	list.insert(2, 47);
 	list.write();
 
-	//LinkedList l;
-	//l = list.getReverseList();
-	//list.insert(2, 444);
-	//l.write();
 	list.reverse();
 	list.write();
 
