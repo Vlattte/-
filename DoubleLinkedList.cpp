@@ -19,14 +19,16 @@ DoubleLinkedList::Node::~Node()
 
 void DoubleLinkedList::Node::insertNext(const ValueType& value)  // [2 (3) new 4]
 {
-	Node* newNode = new Node(value, this->next, this); //создаем новый узел со значением value
-	this->next = newNode; //следующий изменился, но предыдущий остался таким же
+	Node* newNode = new Node(value, this->next, this); //СЃРѕР·РґР°РµРј РЅРѕРІС‹Р№ СѓР·РµР» СЃРѕ Р·РЅР°С‡РµРЅРёРµРј value
+	this->next->previous = newNode;
+	this->next = newNode; //СЃР»РµРґСѓСЋС‰РёР№ РёР·РјРµРЅРёР»СЃСЏ, РЅРѕ РїСЂРµРґС‹РґСѓС‰РёР№ РѕСЃС‚Р°Р»СЃСЏ С‚Р°РєРёРј Р¶Рµ
 }
 
 void DoubleLinkedList::Node::insertPrevious(const ValueType & value) // [2 new (3) 4]
 {
-	Node* newNode = new Node(value, this, this->previous); //создаем новый узел со значением value
-	this->previous = newNode; //предыдущий изменился, но следующий остался таким же
+	Node* newNode = new Node(value, this, this->previous); //СЃРѕР·РґР°РµРј РЅРѕРІС‹Р№ СѓР·РµР» СЃРѕ Р·РЅР°С‡РµРЅРёРµРј value
+	this->previous->next = newNode; //РїСЂРµРґС‹РґСѓС‰РёР№ РёР·РјРµРЅРёР»СЃСЏ, РЅРѕ СЃР»РµРґСѓСЋС‰РёР№ РѕСЃС‚Р°Р»СЃСЏ С‚Р°РєРёРј Р¶Рµ
+	this->previous = newNode;
 }
 
 void DoubleLinkedList::Node::removeNext() // [2 (3) >4< 5] --> [2 (3) 5]
@@ -57,9 +59,9 @@ DoubleLinkedList::DoubleLinkedList()
 
 DoubleLinkedList::DoubleLinkedList(const DoubleLinkedList & copyList) 
 {
-	this->_size = copyList._size; //копируем размер
+	this->_size = copyList._size; //РєРѕРїРёСЂСѓРµРј СЂР°Р·РјРµСЂ
 	
-	//если список, что мы копируем пустой, то возвращем пустой список
+	//РµСЃР»Рё СЃРїРёСЃРѕРє, С‡С‚Рѕ РјС‹ РєРѕРїРёСЂСѓРµРј РїСѓСЃС‚РѕР№, С‚Рѕ РІРѕР·РІСЂР°С‰РµРј РїСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє
 	if (this->_size == 0)
 	{
 		this->_head = nullptr;
@@ -67,14 +69,14 @@ DoubleLinkedList::DoubleLinkedList(const DoubleLinkedList & copyList)
 		return;
 	}
 
-	//выделяем память и копируем голову
+	//РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ Рё РєРѕРїРёСЂСѓРµРј РіРѕР»РѕРІСѓ
 	this->_head = new Node(copyList._head->value);
 
 	Node* currentNode = this->_head;
 	Node* currentCopyNode = copyList._head->next;
 	while (currentCopyNode)
 	{
-		//next для текущего узла = текущий скопированный узел
+		//next РґР»СЏ С‚РµРєСѓС‰РµРіРѕ СѓР·Р»Р° = С‚РµРєСѓС‰РёР№ СЃРєРѕРїРёСЂРѕРІР°РЅРЅС‹Р№ СѓР·РµР»
 		currentNode->next = new Node(currentCopyNode->value);
 		currentCopyNode = currentCopyNode->next; 
 		currentNode = currentNode->next;         
@@ -86,7 +88,7 @@ DoubleLinkedList& DoubleLinkedList::operator=(const DoubleLinkedList& copyList)
 {
 	if (this == &copyList)
 	{
-		return *this; //если совпал, то копируем самого себя
+		return *this; //РµСЃР»Рё СЃРѕРІРїР°Р», С‚Рѕ РєРѕРїРёСЂСѓРµРј СЃР°РјРѕРіРѕ СЃРµР±СЏ
 	}
 
 	this->_size = copyList._size;
@@ -111,10 +113,10 @@ DoubleLinkedList& DoubleLinkedList::operator=(DoubleLinkedList && moveList) noex
 {
 	if (this == &moveList)
 	{
-		return *this;	//если это мы, то возвращаем себя же
+		return *this;	//РµСЃР»Рё СЌС‚Рѕ РјС‹, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµРј СЃРµР±СЏ Р¶Рµ
 	}
 
-	forceNodeDelete(_head); //рекурсивно удаляем this
+	forceNodeDelete(_head); //СЂРµРєСѓСЂСЃРёРІРЅРѕ СѓРґР°Р»СЏРµРј this
 
 	this->_size = moveList._size;
 	this->_head = moveList._head;
@@ -124,7 +126,7 @@ DoubleLinkedList& DoubleLinkedList::operator=(DoubleLinkedList && moveList) noex
 	moveList._head = nullptr;
 	moveList._tail = nullptr;
 
-	return *this; //возвращаем себя скопированного
+	return *this; //РІРѕР·РІСЂР°С‰Р°РµРј СЃРµР±СЏ СЃРєРѕРїРёСЂРѕРІР°РЅРЅРѕРіРѕ
 
 }
 
@@ -144,23 +146,23 @@ DoubleLinkedList::Node* DoubleLinkedList::getNode(const size_t pos) const
 {
 	if (pos < 0)
 	{
-		assert(pos < 0); //ошибка: размер меньше нуля
+		assert(pos < 0); //РѕС€РёР±РєР°: СЂР°Р·РјРµСЂ РјРµРЅСЊС€Рµ РЅСѓР»СЏ
 	}
 	else if (pos >= this->_size)
 	{
-		assert(pos >= this->_size); //ошибка: вышли за границу списка
+		assert(pos >= this->_size); //РѕС€РёР±РєР°: РІС‹С€Р»Рё Р·Р° РіСЂР°РЅРёС†Сѓ СЃРїРёСЃРєР°
 	}
 
 	if (pos == _size - 1) 
 	{
 		return this->_tail;
 	}
-	else //если не последний элемент
+	else //РµСЃР»Рё РЅРµ РїРѕСЃР»РµРґРЅРёР№ СЌР»РµРјРµРЅС‚
 	{
-		Node* bufNode = this->_head; // создаем буфер для хранения головного узла
+		Node* bufNode = this->_head; // СЃРѕР·РґР°РµРј Р±СѓС„РµСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РіРѕР»РѕРІРЅРѕРіРѕ СѓР·Р»Р°
 		for (int i = 0; i < pos; i++)
 		{
-			bufNode = bufNode->next; //перебираем элементы до нужного
+			bufNode = bufNode->next; //РїРµСЂРµР±РёСЂР°РµРј СЌР»РµРјРµРЅС‚С‹ РґРѕ РЅСѓР¶РЅРѕРіРѕ
 		}
 
 		return bufNode;
@@ -171,14 +173,14 @@ void DoubleLinkedList::insert(const size_t pos, const ValueType & value)
 {
 	if (pos < 0)
 	{
-		assert(pos < 0); //ошибка: размер меньше нуля
+		assert(pos < 0); //РѕС€РёР±РєР°: СЂР°Р·РјРµСЂ РјРµРЅСЊС€Рµ РЅСѓР»СЏ
 	}
 	else if (pos > this->_size)
 	{
-		assert(pos > this->_size); //ошибка: вышли за границу списка
+		assert(pos > this->_size); //РѕС€РёР±РєР°: РІС‹С€Р»Рё Р·Р° РіСЂР°РЅРёС†Сѓ СЃРїРёСЃРєР°
 	}
 
-	if (pos == 0) //если нужно вставить в начало списка, то pushFront
+	if (pos == 0) //РµСЃР»Рё РЅСѓР¶РЅРѕ РІСЃС‚Р°РІРёС‚СЊ РІ РЅР°С‡Р°Р»Рѕ СЃРїРёСЃРєР°, С‚Рѕ pushFront
 	{
 		pushFront(value);
 	}
@@ -186,7 +188,7 @@ void DoubleLinkedList::insert(const size_t pos, const ValueType & value)
 	{
 		pushBack(value);
 	}
-	else //иначе перебираем узлы и вставляем на нужную позицию // [1 2 (3) 4 5] ---> [1 2 (3) <new> 4 5]
+	else //РёРЅР°С‡Рµ РїРµСЂРµР±РёСЂР°РµРј СѓР·Р»С‹ Рё РІСЃС‚Р°РІР»СЏРµРј РЅР° РЅСѓР¶РЅСѓСЋ РїРѕР·РёС†РёСЋ // [1 2 (3) 4 5] ---> [1 2 (3) <new> 4 5]
 	{
 		Node* bufNode = this->_head;
 		for (size_t i = 0; i < pos - 1; ++i)
@@ -207,7 +209,7 @@ void DoubleLinkedList::insertAfterNode(Node* node, const ValueType & value)
 	node->insertNext(value);
 }
 
-void DoubleLinkedList::insertBeforeNode(Node * node, const ValueType & value)
+void DoubleLinkedList::insertBeforeNode(Node* node, const ValueType & value)
 {
 	node->insertPrevious(value);
 }
@@ -221,8 +223,8 @@ void DoubleLinkedList::pushBack(const ValueType& value)
 	}
 	else if (_size == 1)
 	{
-		_head = _tail;
 		_tail = new Node(value, nullptr, _head); //[1 2]
+		_head->next = _tail;
 		_size++;
 	}
 	else
@@ -237,7 +239,7 @@ void DoubleLinkedList::pushBack(const ValueType& value)
 
 void DoubleLinkedList::pushFront(const ValueType & value) // [(1) 2 3 4 5] ---> [<new> (1) 2 3 4 5]
 {
-	// перезаписываем головной узел (предыдущий по дефолту nullptr)
+	// РїРµСЂРµР·Р°РїРёСЃС‹РІР°РµРј РіРѕР»РѕРІРЅРѕР№ СѓР·РµР» (РїСЂРµРґС‹РґСѓС‰РёР№ РїРѕ РґРµС„РѕР»С‚Сѓ nullptr)
 	++_size;
 	if (_size == 2)
 	{
@@ -253,7 +255,7 @@ void DoubleLinkedList::pushFront(const ValueType & value) // [(1) 2 3 4 5] ---> 
 	{
 		_head = new Node(value, _head); //[1]
 		Node* buf = this->_head->next;
-		buf->previous = _head; //перезаписываем предыдущий старой голове 
+		buf->previous = _head; //РїРµСЂРµР·Р°РїРёСЃС‹РІР°РµРј РїСЂРµРґС‹РґСѓС‰РёР№ СЃС‚Р°СЂРѕР№ РіРѕР»РѕРІРµ 
 	}
 }
 
@@ -261,16 +263,16 @@ void DoubleLinkedList::remove(const size_t pos)
 {
 	if (pos < 0)
 	{
-		assert(pos < 0);           //ошибка: размер меньше нуля
+		assert(pos < 0);           //РѕС€РёР±РєР°: СЂР°Р·РјРµСЂ РјРµРЅСЊС€Рµ РЅСѓР»СЏ
 	}
 	else if (pos > this->_size)
 	{
-		assert(pos > this->_size); //ошибка: вышли за границу списка
+		assert(pos > this->_size); //РѕС€РёР±РєР°: РІС‹С€Р»Рё Р·Р° РіСЂР°РЅРёС†Сѓ СЃРїРёСЃРєР°
 	}
 
 	if (pos == 0)
 	{
-		//если удаляем голову, то перезаписываем ее
+		//РµСЃР»Рё СѓРґР°Р»СЏРµРј РіРѕР»РѕРІСѓ, С‚Рѕ РїРµСЂРµР·Р°РїРёСЃС‹РІР°РµРј РµРµ
 		this->_head = this->_head->next;
 		_size--;
 	}
@@ -364,7 +366,7 @@ DoubleLinkedList::Node* DoubleLinkedList::findNode(const ValueType & value) cons
 
 void DoubleLinkedList::reverse()
 {
-	size_t cutSize; //уменьшенный в два раза размер
+	size_t cutSize; //СѓРјРµРЅСЊС€РµРЅРЅС‹Р№ РІ РґРІР° СЂР°Р·Р° СЂР°Р·РјРµСЂ
 	if ((_size % 2) == 0)
 	{
 		cutSize = _size / 2;
@@ -379,27 +381,18 @@ void DoubleLinkedList::reverse()
 	{
 		swapper = getNode(idx);
 		insert(_size - idx, swapper->value);
-		write();
-		writeTail();
 		remove(idx);
-		write();
-		writeTail();
 
 		swapper = getNode(_size - idx - 2);
 		insert(idx, swapper->value);
-		write();
-		writeTail();
 		remove(_size - idx - 2);
-		write();
-		writeTail();
 	}
 }
 
 DoubleLinkedList DoubleLinkedList::reverse() const
 {
-	DoubleLinkedList bufList(*this);
-	bufList.reverse();
-	return bufList;
+	this->reverse();
+	return *this;
 }
 
 DoubleLinkedList DoubleLinkedList::getReverseList() const
@@ -418,10 +411,10 @@ void DoubleLinkedList::forceNodeDelete(Node* node)
 {
 	if (node == nullptr)
 	{
-		return; // если конец списка 
+		return; // РµСЃР»Рё РєРѕРЅРµС† СЃРїРёСЃРєР° 
 	}
 
-	// удаляем всех впереди, пока не встретим nullptr
+	// СѓРґР°Р»СЏРµРј РІСЃРµС… РІРїРµСЂРµРґРё, РїРѕРєР° РЅРµ РІСЃС‚СЂРµС‚РёРј nullptr
 	Node* nextDeleteNode = node->next;
 	delete node;
 	forceNodeDelete(nextDeleteNode);
