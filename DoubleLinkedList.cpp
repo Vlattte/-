@@ -14,7 +14,7 @@ DoubleLinkedList::Node::Node(const ValueType& value, Node* next, Node* previous)
 
 DoubleLinkedList::Node::~Node()
 {
-
+	//nothing here
 }
 
 void DoubleLinkedList::Node::insertNext(const ValueType& value)  // [2 (3) new 4]
@@ -40,11 +40,14 @@ void DoubleLinkedList::Node::removeNext() // [2 (3) >4< 5] --> [2 (3) 5]
 	Node* newNext = removeNode->next;
 	delete removeNode;
 	this->next = newNext;
+	newNext->previous = this;
 }
 
 void DoubleLinkedList::Node::removePrevious() // [2 >3< (4) 5] --> [2 (4) 5]
 {
 	Node* removeNode = this->previous;
+	if (removeNode == nullptr)
+		return;
 	Node* newPrevious = removeNode->previous;
 	delete removeNode;
 	this->previous = newPrevious;
@@ -92,9 +95,18 @@ DoubleLinkedList& DoubleLinkedList::operator=(const DoubleLinkedList& copyList)
 	}
 
 	this->_size = copyList._size;
-	this->_head = copyList._head;
-	this->_tail = copyList._tail;
 
+	Node* currentNode = this->_head;
+	Node* currentCopyNode = copyList._head->next;
+	while (currentCopyNode)
+	{
+		//next для текущего узла = текущий скопированный узел
+		currentNode->next = new Node(currentCopyNode->value);
+		currentCopyNode = currentCopyNode->next;
+		currentNode = currentNode->next;
+	}
+
+	this->_tail = copyList._tail;
 	return *this;
 }
 
@@ -191,7 +203,7 @@ void DoubleLinkedList::insert(const size_t pos, const ValueType & value)
 	else //иначе перебираем узлы и вставляем на нужную позицию // [1 2 (3) 4 5] ---> [1 2 (3) <new> 4 5]
 	{
 		Node* bufNode = this->_head;
-		for (size_t i = 0; i < pos - 1; ++i)
+  		for (size_t i = 0; i < pos - 1; ++i)
 		{
 			bufNode = bufNode->next;
 		}
@@ -207,11 +219,13 @@ void DoubleLinkedList::insert(const size_t pos, const ValueType & value)
 void DoubleLinkedList::insertAfterNode(Node* node, const ValueType & value)
 {
 	node->insertNext(value);
+	_size++;
 }
 
 void DoubleLinkedList::insertBeforeNode(Node* node, const ValueType & value)
 {
 	node->insertPrevious(value);
+	_size++;
 }
 
 void DoubleLinkedList::pushBack(const ValueType& value)
@@ -219,7 +233,6 @@ void DoubleLinkedList::pushBack(const ValueType& value)
 	if (_size == 0)
 	{
 		pushFront(value);
-		return;
 	}
 	else if (_size == 1)
 	{
@@ -274,6 +287,7 @@ void DoubleLinkedList::remove(const size_t pos)
 	{
 		//если удаляем голову, то перезаписываем ее
 		this->_head = this->_head->next;
+		_head->previous = nullptr;
 		_size--;
 	}
 	else if (pos == _size - 1)
@@ -304,12 +318,12 @@ void DoubleLinkedList::removeNextNode(Node* node)        // [(1) >2< 3 4 5] --->
 	size_t posTail = findIndex(_tail->value);
 	if (posTail == pos)
 	{
-		std::cout << "Next is nullptr, so, it's already deleted" << std::endl;
-		return;
+		throw std::invalid_argument ("Next is nullptr, so, it's already deleted");
 	}
 
 	size_t position = findIndex(node->next->value);
 	this->remove(position);
+	_size--;
 }
 
 void DoubleLinkedList::removePreviousNode(Node * node)   // [>1< (2) 3 4 5] ---> [(2) 3 4 5]
@@ -317,15 +331,20 @@ void DoubleLinkedList::removePreviousNode(Node * node)   // [>1< (2) 3 4 5] --->
 	size_t pos = findIndex(node->value);
 	if (pos == 0)
 	{
-		std::cout << "There is no previous element" << std::endl;
-		return;
+		throw std::invalid_argument("There is no previous element"); 
 	}
 	size_t position = findIndex(node->previous->value);
 	this->remove(position);
+	_size--;
 }
 
 void DoubleLinkedList::removeFront()
 {
+	if (_head == nullptr)
+	{
+		return;
+	}
+
 	this->remove(0);
 	if (_size == 1)
 	{
@@ -348,20 +367,26 @@ void DoubleLinkedList::removeBack()
 
 long long int DoubleLinkedList::findIndex(const ValueType& value) const
 {
-	size_t i = 0;
-
-	while (i != _size)
+	Node* buff = this->_head;
+	for (long long int i = 0; i < _size; i++)
 	{
-		if (getNode(i)->value == value)
+		if (buff->value == value)
 			return i;
-		++i;
+		buff = buff->next;
 	}
-	std::cout << "There is no such value, so get an enormous index not from the list: ";
+	return -1;
 }
 
 DoubleLinkedList::Node* DoubleLinkedList::findNode(const ValueType & value) const
 {
-	return getNode(findIndex(value));
+	Node* buff = this->_head;
+	for (long long int i = 0; i < _size; i++)
+	{
+		if (buff->value == value)
+			return buff;
+		buff = buff->next;
+	}
+	return nullptr;
 }
 
 void DoubleLinkedList::reverse()
@@ -380,12 +405,12 @@ void DoubleLinkedList::reverse()
 	for (size_t idx = 0; idx < cutSize; ++idx)
 	{
 		swapper = getNode(idx);
-		insert(_size - idx, swapper->value);
+		insert(_size - idx - 1, swapper->value);
 		remove(idx);
 
-		swapper = getNode(_size - idx - 2);
+		swapper = getNode(_size - idx - 1);
 		insert(idx, swapper->value);
-		remove(_size - idx - 2);
+		remove(_size - idx - 1);
 	}
 }
 
